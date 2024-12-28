@@ -34,7 +34,7 @@ export function patchNestJsSwagger(
         return defaultExplore.call(this, type, schemas, schemaRefsStack)
       }
 
-      schemas[type.name] = zodToOpenAPI(type.schema)
+      schemas[type.name] = zodToOpenAPI(type.schema, type.direction ?? 'output')
       return type.name
     }
 

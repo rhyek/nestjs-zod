@@ -9,6 +9,7 @@ export interface ZodDto<
   new (): TOutput
   isZodDto: true
   schema: ZodSchema<TOutput, TDef, TInput>
+  direction?: 'input' | 'output'
   create(input: unknown): TOutput
 }
 
