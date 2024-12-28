@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ZodSchema, ZodTypeDef } from '@nest-zod/z'
+import { ZodSchema, ZodTypeDef, input, output } from '@nest-zod/z'
 
 export interface ZodDto<
   TOutput = any,
   TDef extends ZodTypeDef = ZodTypeDef,
-  TInput = TOutput
+  TInput = TOutput,
+  T = TOutput,
 > {
-  new (): TOutput
+  new (): T
   isZodDto: true
   schema: ZodSchema<TOutput, TDef, TInput>
   direction?: 'input' | 'output'
-  create(input: unknown): TOutput
+  create(input: unknown): T
 }
 
 export function createZodDto<
   TOutput = any,
   TDef extends ZodTypeDef = ZodTypeDef,
-  TInput = TOutput
+  TInput = TOutput,
 >(schema: ZodSchema<TOutput, TDef, TInput>) {
   class AugmentedZodDto {
     public static isZodDto = true
@@ -28,6 +29,22 @@ export function createZodDto<
   }
 
   return AugmentedZodDto as unknown as ZodDto<TOutput, TDef, TInput>
+}
+
+export function createZodInputDto<S extends ZodSchema>(
+  schema: S,
+): ZodDto<output<S>, ZodTypeDef, input<S>, output<S>> {
+  const cls = createZodDto(schema)
+  cls.direction = 'input'
+  return cls
+}
+
+export function createZodOutputDto<S extends ZodSchema>(
+  schema: S,
+): ZodDto<output<S>, ZodTypeDef, input<S>, output<S>> {
+  const cls = createZodDto(schema)
+  cls.direction = 'output'
+  return cls
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
