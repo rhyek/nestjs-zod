@@ -41,7 +41,7 @@ export function createZodInputDto<S extends ZodSchema>(
 
 export function createZodOutputDto<S extends ZodSchema>(
   schema: S,
-): ZodDto<output<S>, ZodTypeDef, input<S>, output<S>> {
+): ZodDto<output<S>, ZodTypeDef, input<S>, input<S>> {
   const cls = createZodDto(schema)
   cls.direction = 'output'
   return cls
